@@ -1,0 +1,214 @@
+# ===================================================================
+# GITIGNORE - MICROSERVICIOS RAILS 8
+# Sistema de Facturación Electrónica FactuMarket S.A.
+# ===================================================================
+
+# ===== RAILS CORE =====
+# Logfiles and tempfiles
+log/*
+tmp/*
+!log/.keep
+!tmp/.keep
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# Ignore uploaded files in development
+storage/*
+!storage/.keep
+tmp/storage/*
+!tmp/storage/.keep
+
+# ===== DEPENDENCIES =====
+# Bundler
+/.bundle/
+vendor/bundle/
+vendor/cache/
+
+# Node modules (si usas Stimulus o importmaps)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== DATABASES =====
+# SQLite databases (por si acaso)
+*.sqlite3
+*.sqlite3-*
+
+# PostgreSQL dumps
+*.sql
+*.dump
+
+# Database configuration secrets
+/config/database.yml.local
+
+# ===== SECURITY & CREDENTIALS =====
+# Rails credentials
+/config/master.key
+/config/credentials/*.key
+/config/credentials.yml.enc
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+
+# ===== RAILS 8 ESPECÍFICO =====
+# Solid Queue job files
+solid_queue.sqlite3*
+
+# Solid Cache
+solid_cache.sqlite3*
+
+# Solid Cable
+solid_cable.sqlite3*
+
+# ===== DOCKER & CONTAINERS =====
+# Docker volumes data
+postgres_data/
+redis_data/
+mongodb_data/
+
+# Docker override files
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Container logs
+*.container.log
+
+# ===== TESTING =====
+# Coverage reports
+coverage/
+.nyc_output/
+
+# RSpec
+spec/tmp/
+.rspec_status
+
+# VCR cassettes (pueden contener datos sensibles)
+spec/vcr_cassettes/*
+!spec/vcr_cassettes/.keep
+
+# ===== DEVELOPMENT TOOLS =====
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# RuboCop cache
+.rubocop-*
+
+# Byebug history
+.byebug_history
+
+# IRB/Pry history
+.irb_history
+.pry_history
+
+# ===== DEPLOYMENT =====
+# Kamal deployment
+/.kamal/
+/config/deploy*.yml
+
+# Capistrano
+/config/deploy/
+/log/capistrano.log
+
+# ===== ASSETS & PRECOMPILATION =====
+# Compiled assets (si los hay)
+public/assets/
+public/packs/
+public/vite/
+
+# Webpack bundles
+app/assets/builds/
+
+# ===== DOCUMENTATION =====
+# Generated docs
+doc/api/
+doc/app/
+.yardoc/
+
+# ===== MONITORING & LOGS =====
+# Application logs
+*.log
+
+# Prometheus metrics
+prometheus_data/
+
+# Grafana data
+grafana_data/
+
+# ===== MICROSERVICES ESPECÍFICO =====
+# Archivos de setup temporal
+setup_demo.sh.backup
+docker-compose.backup.yml
+
+# Archivos de prueba local
+test_endpoints.sh
+local_test.sh
+
+# Datos de demo
+demo_data/
+
+# Archivos de configuración temporal
+config/*.local.yml
+config/*.backup.yml
+
+# ===== BUSINESS SPECIFIC =====
+# Archivos de facturación (datos sensibles)
+invoices_data/
+customer_data/
+audit_logs/
+
+# Certificados DIAN (datos críticos)
+dian_certificates/
+*.p12
+*.pfx
+
+# ===== CACHE & TEMPORARY =====
+# Bootsnap cache
+tmp/bootsnap*
+
+# Spring cache
+.spring/
+
+# Zeitwerk cache
+.zeitwerk/
+
+# ===== BACKUPS =====
+# Database backups
+*.backup
+*.bak
+db_backup/
+
+# ===== PERFORMANCE =====
+# Profiling data
+prof/
+profiler/
+
+# Benchmark results
+benchmark_results/
+.keep
+.md

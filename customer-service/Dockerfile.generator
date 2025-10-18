@@ -1,0 +1,21 @@
+FROM ruby:3.3-alpine
+
+# Instalar dependencias necesarias para Rails 8
+RUN apk add --no-cache \
+    build-base \
+    postgresql-dev \
+    tzdata \
+    curl \
+    nodejs \
+    npm \
+    git \
+    bash
+
+WORKDIR /app
+
+# Instalar Rails 8 y bundler por separado
+RUN gem install bundler
+RUN gem install rails -v "~> 8.0.0"
+
+# Punto de entrada para generar la aplicación
+ENTRYPOINT ["rails"]
