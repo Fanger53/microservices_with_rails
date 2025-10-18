@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 16 para Customer Service
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: customer_service_development
+      POSTGRES_USER: rails
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rails -d customer_service_development"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis para cache y Solid Queue
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Customer Service - Rails 8
+  customer-service:
+    build: 
+      context: ./customer-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://rails:password123@postgres:5432/customer_service_development
+      - REDIS_URL=redis://redis:6379/0
+      - RAILS_MASTER_KEY=dummy_key_for_development
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./customer-service:/app
+      - customer_gems:/app/vendor/bundle
+    stdin_open: true
+    tty: true
+    command: /bin/sh -c "bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
+
+  # Solid Queue Worker (Rails 8)
+  customer-worker:
+    build: 
+      context: ./customer-service
+      dockerfile: Dockerfile
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://rails:password123@postgres:5432/customer_service_development
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./customer-service:/app
+      - customer_gems:/app/vendor/bundle
+    command: bundle exec rails solid_queue:work
+
+volumes:
+  postgres_data:
+  redis_data:
+  customer_gems:
+
+networks:
+  default:
+    driver: bridge

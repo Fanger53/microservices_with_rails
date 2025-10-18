@@ -1,0 +1,56 @@
+source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby '3.3.0'
+
+# Rails 8 con todas las mejoras
+gem 'rails', '~> 8.0.0'
+
+# Base de datos
+gem 'pg', '~> 1.5'
+
+# Rails 8 nuevas características
+gem 'solid_queue'                 # Jobs sin Redis dependency
+gem 'solid_cache'                 # Cache optimizado
+gem 'solid_cable'                 # ActionCable mejorado
+
+# Servidor
+gem 'puma', '~> 6.0'
+
+# Performance y utilidades
+gem 'bootsnap', '>= 1.16.0', require: false
+gem 'oj'                          # JSON parsing optimizado
+gem 'redis', '~> 5.0'             # Para cache y sessions
+
+# API y serialización
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'rack-cors'                   # CORS para APIs
+
+# Validaciones y utilidades
+gem 'dry-validation', '~> 1.10'
+
+# Monitoreo y observabilidad
+gem 'prometheus_exporter'
+gem 'lograge'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 6.0'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'debug'                     # Nuevo debugger Rails 8
+  gem 'brakeman'                  # Security scanner
+  gem 'rubocop-rails-omakase'     # Linter Rails 8
+end
+
+group :development do
+  gem 'listen'
+  gem 'spring'
+  gem 'annotate'
+end
+
+group :test do
+  gem 'shoulda-matchers'
+  gem 'database_cleaner-active_record'
+  gem 'webmock'
+  gem 'vcr'
+end
