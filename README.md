@@ -69,9 +69,7 @@ microservices_with_rails/
 │   ├── Dockerfile                       # Imagen Docker Rails 8
 │   └── README.md                        # Documentación del servicio
 │
-├── 🐳 docker-compose.yml               # Orquestación completa
-├── 📜 setup_demo.sh                    # Script de inicio rápido
-├── 🧪 test_complete_system.sh          # Tests de integración
+├── 🐳 docker-compose.yml              
 └── 📚 README.md                        # Esta documentación
 ```
 
