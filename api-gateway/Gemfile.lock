@@ -1,0 +1,27 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rails (8.0.0)
+    pg (1.5.8)
+    puma (6.4.3)
+    bootsnap (1.18.4)
+    faraday (2.12.0)
+    jwt (2.8.2)
+    # Esta será generada automáticamente cuando se haga bundle install
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  rails (~> 8.0.0)
+  pg (~> 1.5)
+  puma (~> 6.4)
+  bootsnap (~> 1.18)
+  faraday (~> 2.12)
+  jwt (~> 2.8)
+
+RUBY VERSION
+   ruby 3.3.9
+
+BUNDLED WITH
+   2.5.0

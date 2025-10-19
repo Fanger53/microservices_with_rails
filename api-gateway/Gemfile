@@ -1,0 +1,68 @@
+source "https://rubygems.org"
+
+ruby "3.3.9"
+
+# Rails 8 con modo API
+gem "rails", "~> 8.0.0"
+gem "pg", "~> 1.5"
+gem "puma", "~> 6.4"
+gem "bootsnap", "~> 1.18", require: false
+
+# Rails 8 - Nuevos componentes
+gem "solid_queue", "~> 1.0"
+gem "solid_cache", "~> 1.0"
+gem "solid_cable", "~> 3.0"
+
+# Redis para cache y sesiones
+gem "redis", "~> 5.3"
+
+# HTTP Client para proxy a microservicios
+gem "faraday", "~> 2.12"
+gem "faraday-retry", "~> 2.2"
+gem "faraday-follow_redirects", "~> 0.3"
+
+# Autenticación y autorización
+gem "jwt", "~> 2.8"
+gem "bcrypt", "~> 3.1"
+
+# Rate limiting y middleware
+gem "rack-attack", "~> 6.7"
+gem "rack-cors", "~> 2.0"
+gem "rack-timeout", "~> 0.7"
+
+# Logging y monitoreo
+gem "lograge", "~> 0.14"
+gem "prometheus_exporter", "~> 2.1"
+gem "health_check", "~> 3.1"
+
+# Validaciones y business logic
+gem "dry-validation", "~> 1.10"
+gem "dry-schema", "~> 1.13"
+
+# JSON processing
+gem "jbuilder", "~> 2.12"
+gem "multi_json", "~> 1.15"
+
+# Circuit breaker para resiliencia
+gem "circuit_breaker", "~> 2.0"
+
+# Documentación API
+gem "rswag", "~> 2.13"
+
+group :development, :test do
+  gem "debug", "~> 1.9", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "brakeman", "~> 6.2", require: false
+  gem "rubocop-rails-omakase", "~> 1.0", require: false
+  gem "rspec-rails", "~> 7.0"
+  gem "factory_bot_rails", "~> 6.4"
+end
+
+group :development do
+  gem "web-console", "~> 4.2"
+  gem "listen", "~> 3.8"
+end
+
+group :test do
+  gem "webmock", "~> 3.23"
+  gem "vcr", "~> 6.2"
+end

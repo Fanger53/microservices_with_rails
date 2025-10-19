@@ -55,6 +55,8 @@ services:
       - customer_gems:/app/vendor/bundle
     stdin_open: true
     tty: true
+    networks:
+      - microservices_network
     command: /bin/sh -c "bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
 
   # Invoice Service - Rails 8
@@ -82,6 +84,8 @@ services:
       - invoice_gems:/app/vendor/bundle
     stdin_open: true
     tty: true
+    networks:
+      - microservices_network
     command: /bin/sh -c "bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
 
   # Solid Queue Worker (Rails 8)
@@ -101,6 +105,8 @@ services:
     volumes:
       - ./customer-service:/app
       - customer_gems:/app/vendor/bundle
+    networks:
+      - microservices_network
     command: bundle exec rails solid_queue:work
 
   # Invoice Service Worker (Rails 8)
@@ -121,6 +127,8 @@ services:
     volumes:
       - ./invoice-service:/app
       - invoice_gems:/app/vendor/bundle
+    networks:
+      - microservices_network
     command: bundle exec rails solid_queue:work
 
   # Audit Service - Puerto 3003
@@ -166,13 +174,42 @@ services:
       - microservices_network
     command: ["./bin/jobs"]
 
+  # API Gateway - Puerto 3000
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/api_gateway_development
+      - REDIS_URL=redis://redis:6379/3
+      - JWT_SECRET_KEY=api_gateway_secret_key_for_development_change_in_production
+      - CUSTOMER_SERVICE_URL=http://customer-service:3001
+      - INVOICE_SERVICE_URL=http://invoice-service:3002
+      - AUDIT_SERVICE_URL=http://audit-service:3003
+    depends_on:
+      - postgres
+      - redis
+      - customer-service
+      - invoice-service
+      - audit-service
+    volumes:
+      - api_gateway_gems:/usr/local/bundle
+      - ./api-gateway:/rails
+    networks:
+      - microservices_network
+    command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+
 volumes:
   postgres_data:
   redis_data:
   customer_gems:
   invoice_gems:
   audit_gems:
+  api_gateway_gems:
 
 networks:
   default:
+    driver: bridge
+  microservices_network:
     driver: bridge
