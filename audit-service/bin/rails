@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require_relative "../config/environment"
+
+require "rails/command"
+require "rails/commands"
+Rails::Command.invoke :runner, ARGV

@@ -7,7 +7,7 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 # Rails app lives here
 WORKDIR /rails
 
-# Set production environment
+# Set development environment for easier debugging
 ENV RAILS_ENV="development" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
@@ -44,6 +44,7 @@ RUN apt-get update -qq && \
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
+
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
@@ -54,5 +55,5 @@ USER 1000:1000
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start server
-EXPOSE 3001
-CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3001"]
+EXPOSE 3003
+CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3003"]

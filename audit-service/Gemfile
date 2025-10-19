@@ -1,0 +1,61 @@
+source "https://rubygems.org"
+
+ruby "3.3.9"
+
+# Rails 8 y dependencias principales
+gem "rails", "~> 8.0.0"
+gem "pg", "~> 1.5"
+gem "puma", "~> 6.4"
+gem "bootsnap", "~> 1.18", require: false
+
+# Rails 8 - Nuevos componentes por defecto
+gem "solid_queue", "~> 1.0"
+gem "solid_cache", "~> 1.0"
+gem "solid_cable", "~> 3.0"
+
+# Redis para cache y jobs
+gem "redis", "~> 5.3"
+
+# Serialización JSON
+gem "jbuilder", "~> 2.12"
+
+# Comunicación entre servicios
+gem "faraday", "~> 2.12"
+gem "faraday-retry", "~> 2.2"
+
+# Para auditoría avanzada
+gem "paper_trail", "~> 15.0"  # Versionado de modelos
+gem "lograge", "~> 0.14"      # Logging estructurado
+gem "ahoy_matey", "~> 5.2"    # Analytics y tracking
+gem "chronic", "~> 0.10"      # Parsing de fechas natural
+
+# Business logic
+gem "dry-validation", "~> 1.10"
+gem "dry-transaction", "~> 0.16"
+gem "dry-events", "~> 1.0"    # Event-driven architecture
+
+# Autorización y seguridad
+gem "pundit", "~> 2.4"        # Políticas de autorización
+gem "rack-cors", "~> 2.0"     # CORS
+
+# Monitoring y observabilidad
+gem "prometheus_exporter", "~> 2.1"  # Métricas
+gem "health_check", "~> 3.1"         # Health endpoints
+
+# Circuit breaker para resiliencia
+gem "circuit_breaker", "~> 2.0"
+
+group :development, :test do
+  gem "debug", "~> 1.9", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "brakeman", "~> 6.2", require: false
+  gem "rubocop-rails-omakase", "~> 1.0", require: false
+end
+
+group :development do
+  gem "web-console", "~> 4.2"
+end
+
+group :test do
+  gem "capybara", "~> 3.40"
+  gem "selenium-webdriver", "~> 4.27"
+end
