@@ -1,0 +1,78 @@
+source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby '3.3.9'
+
+# Rails 8 con todas las mejoras
+gem 'rails', '~> 8.0.0'
+
+# Base de datos
+gem 'pg', '~> 1.5'
+
+# Rails 8 nuevas características
+gem 'solid_queue'                 # Jobs sin Redis dependency
+gem 'solid_cache'                 # Cache optimizado
+gem 'solid_cable'                 # ActionCable mejorado
+
+# Servidor
+gem 'puma', '~> 6.0'
+
+# Performance y utilidades
+gem 'bootsnap', '>= 1.16.0', require: false
+gem 'oj'                          # JSON parsing optimizado
+gem 'redis', '~> 5.0'             # Para cache y sessions
+
+# API y serialización
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'rack-cors'                   # CORS para APIs
+
+# HTTP Client para comunicación con otros servicios
+gem 'faraday', '~> 2.0'          # HTTP client moderno
+gem 'faraday-retry', '~> 2.0'    # Retry automático
+gem 'circuit_breaker', '~> 1.1'  # Circuit breaker pattern
+
+# PDF y XML generation para facturas
+gem 'prawn', '~> 2.4'            # PDF generation
+gem 'nokogiri', '~> 1.15'        # XML generation y parsing
+
+# Cálculos y validaciones de negocio
+gem 'money-rails', '~> 1.15'     # Manejo de moneda
+gem 'dry-validation', '~> 1.10'
+gem 'dry-transaction', '~> 0.15' # Transacciones de dominio
+
+# State machine para estados de factura
+gem 'aasm', '~> 5.5'             # State machine
+
+# Monitoreo y observabilidad
+gem 'prometheus_exporter'
+gem 'lograge'
+
+# Deploy this application anywhere as a Docker container
+gem "kamal", require: false
+gem "thruster", require: false
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
+
+group :development, :test do
+  gem 'rspec-rails', '~> 6.0'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'debug'                     # Nuevo debugger Rails 8
+  gem 'brakeman'                  # Security scanner
+  gem 'rubocop-rails-omakase'     # Linter Rails 8
+end
+
+group :development do
+  gem 'listen'
+  gem 'spring'
+  gem 'annotate'
+end
+
+group :test do
+  gem 'shoulda-matchers'
+  gem 'database_cleaner-active_record'
+  gem 'webmock'
+  gem 'vcr'
+  gem 'timecop'                   # Para testing de fechas
+end

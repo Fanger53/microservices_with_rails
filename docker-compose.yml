@@ -57,6 +57,33 @@ services:
     tty: true
     command: /bin/sh -c "bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
 
+  # Invoice Service - Rails 8
+  invoice-service:
+    build: 
+      context: ./invoice-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://rails:password123@postgres:5432/invoice_service_development
+      - REDIS_URL=redis://redis:6379/1
+      - RAILS_MASTER_KEY=dummy_key_for_development
+      - CUSTOMER_SERVICE_URL=http://customer-service:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      customer-service:
+        condition: service_started
+    volumes:
+      - ./invoice-service:/app
+      - invoice_gems:/app/vendor/bundle
+    stdin_open: true
+    tty: true
+    command: /bin/sh -c "bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
+
   # Solid Queue Worker (Rails 8)
   customer-worker:
     build: 
@@ -76,10 +103,75 @@ services:
       - customer_gems:/app/vendor/bundle
     command: bundle exec rails solid_queue:work
 
+  # Invoice Service Worker (Rails 8)
+  invoice-worker:
+    build: 
+      context: ./invoice-service
+      dockerfile: Dockerfile
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://rails:password123@postgres:5432/invoice_service_development
+      - REDIS_URL=redis://redis:6379/1
+      - CUSTOMER_SERVICE_URL=http://customer-service:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./invoice-service:/app
+      - invoice_gems:/app/vendor/bundle
+    command: bundle exec rails solid_queue:work
+
+  # Audit Service - Puerto 3003
+  audit-service:
+    build: ./audit-service
+    ports:
+      - "3003:3003"
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/audit_service_development
+      - REDIS_URL=redis://redis:6379/2
+      - CUSTOMER_SERVICE_URL=http://customer-service:3001
+      - INVOICE_SERVICE_URL=http://invoice-service:3002
+    depends_on:
+      - postgres
+      - redis
+      - customer-service
+      - invoice-service
+    volumes:
+      - audit_gems:/usr/local/bundle
+      - ./audit-service:/rails
+    networks:
+      - microservices_network
+    command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3003"]
+
+  # Worker para Audit Service
+  audit-worker:
+    build: ./audit-service
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/audit_service_development
+      - REDIS_URL=redis://redis:6379/2
+      - CUSTOMER_SERVICE_URL=http://customer-service:3001
+      - INVOICE_SERVICE_URL=http://invoice-service:3002
+    depends_on:
+      - postgres
+      - redis
+      - audit-service
+    volumes:
+      - audit_gems:/usr/local/bundle
+      - ./audit-service:/rails
+    networks:
+      - microservices_network
+    command: ["./bin/jobs"]
+
 volumes:
   postgres_data:
   redis_data:
   customer_gems:
+  invoice_gems:
+  audit_gems:
 
 networks:
   default:
